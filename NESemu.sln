@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.32802.440
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "emulatorTest", "emulatorTest\emulatorTest.csproj", "{F5D76158-F90C-49C4-BC20-CE9C2E8641E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NESemuCore", "NESemuCore\NESemuCore.csproj", "{F5D76158-F90C-49C4-BC20-CE9C2E8641E2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "guiTest", "guiTest\guiTest.csproj", "{35ADF476-8C9E-43A9-9415-2100972B47F6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NESemuGUI", "NESemuGUI\NESemuGUI.csproj", "{35ADF476-8C9E-43A9-9415-2100972B47F6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
