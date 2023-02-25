@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="emulatorTest.Bus">
+    <Position X="1.5" Y="1" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAgACAAAAADCEQIYAAAACABEAAgAAAAEAAgAQAAgA=</HashCode>
+      <FileName>Bus.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="PPU" />
+      <Field Name="CPU" />
+      <Field Name="Cartridge" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="emulatorTest.PPU2C02.PPU">
+    <Position X="10.25" Y="3.75" Width="4" />
+    <Members>
+      <Field Name="_addressLatch" Hidden="true" />
+      <Field Name="_bgNextTileAttrib" Hidden="true" />
+      <Field Name="_bgNextTileId" Hidden="true" />
+      <Field Name="_bgNextTileLSB" Hidden="true" />
+      <Field Name="_bgNextTileMSB" Hidden="true" />
+      <Field Name="_bgShifterAttribHigh" Hidden="true" />
+      <Field Name="_bgShifterAttribLow" Hidden="true" />
+      <Field Name="_bgShifterPatternHigh" Hidden="true" />
+      <Field Name="_bgShifterPatternLow" Hidden="true" />
+      <Field Name="_patternTable" Hidden="true" />
+      <Field Name="_ppuDataBuffer" Hidden="true" />
+      <Field Name="_spriteCount" Hidden="true" />
+      <Field Name="_spriteScanline" Hidden="true" />
+      <Field Name="_spriteShifterPatternHigh" Hidden="true" />
+      <Field Name="_spriteShifterPatternLow" Hidden="true" />
+      <Field Name="_spriteZeroBeingRendered" Hidden="true" />
+      <Field Name="_spriteZeroHitPossible" Hidden="true" />
+      <Field Name="_tblName" Hidden="true" />
+      <Field Name="_tblPattern" Hidden="true" />
+    </Members>
+    <AssociationLine Name="Mask" Type="emulatorTest.PPU2C02.Flags.PPUMaskFlags" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="14.25" Y="4.938" />
+        <Point X="14.625" Y="4.938" />
+        <Point X="14.625" Y="2.451" />
+        <Point X="15.75" Y="2.451" />
+      </Path>
+    </AssociationLine>
+    <AssociationLine Name="Control" Type="emulatorTest.PPU2C02.Flags.PPUControlFlags" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="14.25" Y="10.938" />
+        <Point X="14.625" Y="10.938" />
+        <Point X="14.625" Y="10.938" />
+        <Point X="15.75" Y="10.938" />
+      </Path>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AeAcAAQEAAOARiAAwQQYAwEYAAACgBEAE1SACAmHBxg=</HashCode>
+      <FileName>PPU2C02\PPU.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="Status" />
+      <Field Name="Mask" />
+      <Field Name="Control" />
+      <Field Name="VramAddr" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="emulatorTest.CPU6502.CPU">
+    <Position X="5.5" Y="1" Width="2.75" />
+    <Members>
+      <Field Name="_temp" Hidden="true" />
+      <Method Name="ABS" Hidden="true" />
+      <Method Name="ABX" Hidden="true" />
+      <Method Name="ABY" Hidden="true" />
+      <Method Name="ADC" Hidden="true" />
+      <Method Name="AND" Hidden="true" />
+      <Method Name="ASL" Hidden="true" />
+      <Method Name="BCC" Hidden="true" />
+      <Method Name="BCS" Hidden="true" />
+      <Method Name="BEQ" Hidden="true" />
+      <Method Name="BIT" Hidden="true" />
+      <Method Name="BMI" Hidden="true" />
+      <Method Name="BNE" Hidden="true" />
+      <Method Name="BPL" Hidden="true" />
+      <Method Name="BRK" Hidden="true" />
+      <Method Name="BVC" Hidden="true" />
+      <Method Name="BVS" Hidden="true" />
+      <Method Name="CLC" Hidden="true" />
+      <Method Name="CLD" Hidden="true" />
+      <Method Name="CLI" Hidden="true" />
+      <Method Name="CLV" Hidden="true" />
+      <Method Name="CMP" Hidden="true" />
+      <Method Name="CPX" Hidden="true" />
+      <Method Name="CPY" Hidden="true" />
+      <Method Name="DEC" Hidden="true" />
+      <Method Name="DEX" Hidden="true" />
+      <Method Name="DEY" Hidden="true" />
+      <Method Name="EOR" Hidden="true" />
+      <Method Name="IMM" Hidden="true" />
+      <Method Name="IMP" Hidden="true" />
+      <Method Name="INC" Hidden="true" />
+      <Method Name="IND" Hidden="true" />
+      <Method Name="INX" Hidden="true" />
+      <Method Name="INY" Hidden="true" />
+      <Method Name="IZX" Hidden="true" />
+      <Method Name="IZY" Hidden="true" />
+      <Method Name="JMP" Hidden="true" />
+      <Method Name="JSR" Hidden="true" />
+      <Method Name="LDA" Hidden="true" />
+      <Method Name="LDX" Hidden="true" />
+      <Method Name="LDY" Hidden="true" />
+      <Method Name="LSR" Hidden="true" />
+      <Method Name="NOP" Hidden="true" />
+      <Method Name="ORA" Hidden="true" />
+      <Method Name="PHA" Hidden="true" />
+      <Method Name="PHP" Hidden="true" />
+      <Method Name="PLA" Hidden="true" />
+      <Method Name="PLP" Hidden="true" />
+      <Method Name="REL" Hidden="true" />
+      <Method Name="ROL" Hidden="true" />
+      <Method Name="ROR" Hidden="true" />
+      <Method Name="RTI" Hidden="true" />
+      <Method Name="RTS" Hidden="true" />
+      <Method Name="SBC" Hidden="true" />
+      <Method Name="SEC" Hidden="true" />
+      <Method Name="SED" Hidden="true" />
+      <Method Name="SEI" Hidden="true" />
+      <Method Name="STA" Hidden="true" />
+      <Method Name="STX" Hidden="true" />
+      <Method Name="STY" Hidden="true" />
+      <Method Name="TAX" Hidden="true" />
+      <Method Name="TAY" Hidden="true" />
+      <Method Name="TSX" Hidden="true" />
+      <Method Name="TXA" Hidden="true" />
+      <Method Name="TXS" Hidden="true" />
+      <Method Name="TYA" Hidden="true" />
+      <Method Name="UNK" Hidden="true" />
+      <Method Name="ZP0" Hidden="true" />
+      <Method Name="ZPX" Hidden="true" />
+      <Method Name="ZPY" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AAgASAEkBGCCJsYIAsHYAgCgAWjaAQAQUBAAIIEA9qI=</HashCode>
+      <FileName>CPU6502\AddressingModes.cs</FileName>
+      <NewMemberFileName>CPU6502\CPU.cs</NewMemberFileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Field Name="lookup" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="emulatorTest.NESGamePak.Cartridge">
+    <Position X="1.5" Y="8" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAIQAAAAFAABAAAAQAAAAAAgRIAgAYAASAAAAAAAAg=</HashCode>
+      <FileName>NESGamePak\Cartridge.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Field Name="_pMapper" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="emulatorTest.NESGamePak.Mapper">
+    <Position X="5.5" Y="7.25" Width="2.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="emulatorTest.NESGamePak.Mapper.MIRROR">
+        <TypeIdentifier>
+          <NewMemberFileName>NESGamePak\Mapper.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAQAACACAABAAAAAAAAABAgAAAAAQAAAAAAAAAQAA=</HashCode>
+      <FileName>NESGamePak\Mapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="emulatorTest.PPU2C02.Flags.PPUStatusFlags">
+    <Position X="15.75" Y="7" Width="3" />
+    <TypeIdentifier>
+      <HashCode>ABAAAAAAAAAAAAAAAAoAAAAAAAAAAAAAAAAAAAABAAA=</HashCode>
+      <FileName>PPU2C02\Flags\PPUStatusFlags.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="emulatorTest.PPU2C02.Flags.PPUMaskFlags">
+    <Position X="15.75" Y="1" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAIAAAAAIAQAAAgQAAAAAAACAAAAAIgAA=</HashCode>
+      <FileName>PPU2C02\Flags\PPUMaskFlags.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="emulatorTest.PPU2C02.Flags.PPUControlFlags">
+    <Position X="15.75" Y="9.5" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAABEAAAAAAAACIAAAAAAAIAAgCAAAAAAAABAAA=</HashCode>
+      <FileName>PPU2C02\Flags\PPUControlFlags.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="emulatorTest.PPU2C02.PPUInternalRegister">
+    <Position X="15.75" Y="4.25" Width="3" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAEAgAAAAAAAIAAAAIAAIAAAAAAAAAAAAAAQA=</HashCode>
+      <FileName>PPU2C02\PPUInternalRegister.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="emulatorTest.NESGamePak.Mapper_000" Collapsed="true">
+    <Position X="8.5" Y="7.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAACACAABAAAAAAAAABAAAAAAAAAAAAAAAAAQAA=</HashCode>
+      <FileName>NESGamePak\Mapper_000.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="emulatorTest.NESGamePak.Mapper_001" Collapsed="true">
+    <Position X="8.5" Y="9.25" Width="1.5" />
+    <InheritanceLine Type="emulatorTest.NESGamePak.Mapper" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8" Y="9.536" />
+        <Point X="8.24" Y="9.536" />
+        <Point X="8.24" Y="9.625" />
+        <Point X="8.5" Y="9.625" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAACBCgABAAABIAADAJAgAEAAAAAAAIEgAAAQAA=</HashCode>
+      <FileName>NESGamePak\Mapper_001.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Struct Name="emulatorTest.CPU6502.INSTRUCTION">
+    <Position X="10.25" Y="1" Width="4" />
+    <NestedTypes>
+      <Delegate Name="emulatorTest.CPU6502.INSTRUCTION.operationDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>CPU6502\CPU.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+      <Delegate Name="emulatorTest.CPU6502.INSTRUCTION.addressingModeDelegate" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>CPU6502\CPU.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Delegate>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAABAAAAAAAAAAAgAAAgAAAAAAEAAAAAAAAAAABAAA=</HashCode>
+      <FileName>CPU6502\CPU.cs</FileName>
+    </TypeIdentifier>
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

@@ -1,0 +1,21 @@
+Audio
+------
+Not supported
+
+CPU
+-----
+branch_timing_tests
+cpu_dummy_reads		?	Failed (Unsupported Mapper)
+cpu_dummy_writes		0/2	Failed
+cpu_exec_space		0/2	Failed
+cpu_interrupts_v2		0/5	5 x Failed, 1 x Unsupported Mapper
+cpu_reset			0/2	1 x Failed, 1 x Inconclusive
+
+
+dmc_dma_during_read4	?/5	?
+
+PPU
+-----
+
+
+ppu_read_buffer		-/-	Failed (Unsupported Mapper)
