@@ -1,0 +1,36 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "emulatorTest/1.0.0": {
+        "dependencies": {
+          "guiTest": "1.0.0"
+        },
+        "runtime": {
+          "emulatorTest.dll": {}
+        }
+      },
+      "guiTest/1.0.0": {
+        "runtime": {
+          "guiTest.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "emulatorTest/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "guiTest/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
