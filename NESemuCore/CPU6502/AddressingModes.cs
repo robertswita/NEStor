@@ -11,7 +11,6 @@ namespace emulatorTest.CPU6502
 
         public int IMM() // Immediate
         {
-            //return PC++;
             var address = PC;
             PC++;
             return address;
@@ -59,8 +58,8 @@ namespace emulatorTest.CPU6502
         // function accurately, we also need to emulate this bug. If the low byte of the
         // supplied address is 0xFF, then to read the high byte of the actual address
         // we need to cross a page boundary. This doesn't actually work on the chip as 
-        // designed, instead it wraps back around in the same page, yielding an 
-        // invalid actual address
+        // designed, instead it wraps back around in the same page, yielding actually an 
+        // invalid address
         public int IND() // Indirect
         {
             var ptr = ABS();
@@ -85,7 +84,7 @@ namespace emulatorTest.CPU6502
             var hi = Read((t + 1) & 0xFF);
             var address = ((hi << 8) | lo) + Y;
             ActOp.PageCross(address, Y);
-            return address;
+            return address & 0xFFFF;
         }
 
         public int REL() // Relative
