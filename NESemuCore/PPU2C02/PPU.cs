@@ -1,10 +1,11 @@
 ﻿using emulatorTest.PPU2C02.Flags;
 using System;
 using System.Drawing;
+using Common;
 
 namespace emulatorTest.PPU2C02
 {
-    class PPU : Common
+    class PPU
     {
         public bool FrameComplete;
         public bool IsOddFrame;
@@ -53,11 +54,11 @@ namespace emulatorTest.PPU2C02
         // SPRITES
         private readonly uint[] _palScreen = new uint[0x40]; // 64
 
-        private uint[] _screen = new uint[256 * 240];
+        public TPixmap Screen = new TPixmap(256, 240);
 
         //USED FOR DEBUGGING ONLY (ARE FOR PRESENTATION PURPOSE ONLY)
         private readonly uint[][] _nameTable = { new uint[256 * 240], new uint[256 * 240] };
-        private readonly uint[][] _patternTable = { new uint[128 * 128], new uint[128 * 128] };
+        //private readonly uint[][] _patternTable = { new uint[128 * 128], new uint[128 * 128] };
 
         private byte _addressLatch;
         private byte _ppuDataBuffer;
@@ -219,7 +220,7 @@ namespace emulatorTest.PPU2C02
                 if (_cycle == 340)
                     LoadSpriteShifters();
                 if (_cycle > 0 && _cycle < 257 && _scanline >= 0)
-                    SetPixel(ref _screen, 256, _cycle - 1, _scanline, GetPixelColor(), 240);
+                    Screen[_cycle - 1, _scanline] = GetPixelColor();
             }
             _cycle++;
             if (_cycle >= 341)
@@ -357,43 +358,45 @@ namespace emulatorTest.PPU2C02
             ScrollY = 0;
         }
 
-        public uint[] GetScreen()
+        TPixmap ReadTile(int tileIdx, int palette)
         {
-            return _screen;
+            TPixmap tile = new TPixmap(8, 8);
+            for (var row = 0; row < 8; row++)
+            {
+                var address = (tileIdx << 4) + row;
+                var tile_lsb = PpuRead(address);
+                var tile_msb = PpuRead(address + 8);
+                for (var col = 7; col >= 0; col--)
+                {
+                    var pixel = 2 * (tile_msb & 0x01) + (tile_lsb & 0x01);
+                    tile_lsb >>= 1;
+                    tile_msb >>= 1;
+                    tile[col, row] = GetColourFromPaletteRam(palette, pixel);
+                }
+            }
+            return tile;
         }
 
         /// <summary>
         /// Debug view of the specific pattern table for given palette
         /// </summary>
-        /// <param name="i"></param>
+        /// <param name="idx"></param>
         /// <param name="palette"></param>
         /// <returns></returns>
-        public uint[] GetPatternTable(byte i, byte palette)
+        public TPixmap GetPattern(int idx, byte palette)
         {
+            var pattern = new TPixmap(128, 0);
             for (var nTileY = 0; nTileY < 16; nTileY++)
             {
+                var patternRow = new TPixmap(0, 8);
                 for (var nTileX = 0; nTileX < 16; nTileX++)
                 {
-                    var nOffset = (UInt16)(nTileY * 256 + nTileX * 16); // byte offset
-                    for (var row = 0; row < 8; row++)
-                    {
-                        byte tile_lsb = PpuRead(i * 0x1000 + nOffset + row + 0);
-                        byte tile_msb = PpuRead(i * 0x1000 + nOffset + row + 8);
-
-                        for (var col = 0; col < 8; col++)
-                        {
-                            byte pixel = (byte)((tile_lsb & 0x01) + (tile_msb & 0x01));
-                            //byte pixel = (byte)((tile_lsb & 1) | (tile_msb >> 7));
-                            tile_lsb >>= 1;
-                            tile_msb >>= 1;
-
-                            SetPixel(ref _patternTable[i], 128, nTileX * 8 + (7 - col), nTileY * 8 + row, GetColourFromPaletteRam(palette, pixel));
-                        }
-                    }
+                    var tile = ReadTile(256 * idx + nTileY * 16 + nTileX, palette);
+                    patternRow = patternRow.HorzCat(tile);
                 }
+                pattern = pattern.VertCat(patternRow);
             }
-
-            return _patternTable[i];
+            return pattern;
         }
 
         // TO JEST PROWIZORYCZNY WYGLAD, PALETY MOGA SIE NIE ZGADZAC, ale
@@ -401,122 +404,36 @@ namespace emulatorTest.PPU2C02
         /// <summary>
         /// Debug view of the specific name table
         /// </summary>
-        /// <param name="i"></param>
+        /// <param name="idx"></param>
         /// <returns></returns>
-        public uint[] GetNameTable(byte i)
+        public TPixmap GetNameTable(int idx)
         {
-            //rgba
-            //UInt32 red = 0xFF000000;
-            //UInt32 green = 0x00FF0000;
-            //UInt32 blue = 0x0000FF00;
-            //UInt32 yellow = 0xFFFF0000;
-            //32x30
+            var nameTable = new TPixmap(256, 0);
             for (var nTileY = 0; nTileY < 30; nTileY++)
             {
+                var nameTableRow = new TPixmap(0, 8);
                 for (var nTileX = 0; nTileX < 32; nTileX++)
                 {
-                    //0x0 - AttrGroup:0x0, Attr:0x0, Data:AA, Top-Left
-                    //0x1 - AttrGroup:0x0, Attr:0x0, Data:AA, Top-Left
-                    //0x2 - AttrGroup:0x0, Attr:0x1, Data:AA, Top-Right
-                    //0x3 - AttrGroup:0x0, Attr:0x1, Data:AA, Top-Right
-                    //0x4 - AttrGroup:0x1, Attr:0x2, Data:AA, Top-Left
-
-                    //1x0 - AttrGroup:0x0, Attr:0x0, Data:AA, Top-Left
-
-                    //2x0 - AttrGroup:0x0, Attr:1x0, Data:AA, Bottom-Left
-
-                    //4x0 - AttrGroup:1x0, Attr:2x0, Data:00, Top-Left
-
-                    //UInt16 nOffset = (UInt16)(nTileY * 256 + nTileX * 32); // byte offset
-
-                    byte attr_group_grid_x = (byte)(nTileX / 4); byte attr_grid_x = (byte)(nTileX / 2);
-                    byte attr_group_grid_y = (byte)(nTileY / 4); byte attr_grid_y = (byte)(nTileY / 2);
-                    byte attr_grid_index = (byte)(attr_group_grid_y * 8 + attr_group_grid_x);
-                    byte attr_grid_data = _tblName[i][0x3C0 + attr_grid_index];
-                    byte palette;
-
-                    if ((byte)((attr_grid_y + 1) % 2) == 0)
-                    {
-                        //even
-                        if ((byte)((attr_grid_x + 1) % 2) == 0)
-                            palette = (byte)((attr_grid_data >> 6) & 0b11);    //even/ even //bottom right
-                        else
-                            palette = (byte)((attr_grid_data >> 4) & 0b11);    //even/ odd  //bottom left
-                    }
-                    else
-                    {
-                        if ((byte)((attr_grid_x + 1) % 2) == 0)
-                            palette = (byte)((attr_grid_data >> 2) & 0b11);    // odd / even //top right
-                        else
-                            palette = (byte)((attr_grid_data >> 0) & 0b11);    // odd / even //top Left
-                    }
-
-                    byte tile_index = _tblName[i][nTileY * 32 + nTileX];
-                    for (var row = 0; row < 8; row++)
-                    {
-                        //name table 0 0x2000 (byte TILE_ID(only from second half?)) 
-                            //attr 0   0x23C0
-                        //name table 1 0x23FF
-                            //attr 1   0x27C0
-
-                        byte tile_lsb = PpuRead(0x1000 + (tile_index << 4) + row + 0);
-                        byte tile_msb = PpuRead(0x1000 + (tile_index << 4) + row + 8);
-
-                        for (var col = 0; col < 8; col++)
-                        {
-                            byte pixel = (byte)((tile_lsb & 0x01) + (tile_msb & 0x01));
-                            //byte pixel = (byte)((tile_lsb & 1) | (tile_msb >> 7));
-                            tile_lsb >>= 1;
-                            tile_msb >>= 1;
-
-                            //UInt32 debugCol = 0xFFFFFF00;
-
-                            //switch (palette)
-                            //{
-                            //    case 0b00:
-                            //        debugCol = red; break;
-                            //    case 0b01:
-                            //        debugCol = green; break;
-                            //    case 0b10:
-                            //        debugCol = blue; break;
-                            //    case 0b11:
-                            //        debugCol = yellow; break;
-                            //}
-
-                            //SetPixel(ref _nameTable[i], 256, nTileX * 8 + (7 - col), nTileY * 8 + row, debugCol);
-                            SetPixel(ref _nameTable[i], 256, nTileX * 8 + (7 - col), nTileY * 8 + row, GetColourFromPaletteRam(palette, pixel));
-                        }
-                    }
+                    var attr_group_grid_x = nTileX / 4;
+                    var attr_group_grid_y = nTileY / 4;
+                    var attr_grid_index = attr_group_grid_y * 8 + attr_group_grid_x;
+                    var attr_grid_data = _tblName[idx][0x3C0 + attr_grid_index];
+                    var attr_grid_x = (nTileX / 2) & 1;
+                    var attr_grid_y = (nTileY / 2) & 1;
+                    int palette = attr_grid_data >> 2 * (2 * attr_grid_y + attr_grid_x);
+                    int tile_index = _tblName[idx][nTileY * 32 + nTileX] + 256;
+                    var tile = ReadTile(tile_index, palette & 0x3);
+                    nameTableRow = nameTableRow.HorzCat(tile);
                 }
+                nameTable = nameTable.VertCat(nameTableRow);
             }
-
-            return _nameTable[i];
+            return nameTable;
         }
 
         //public bool GetMirroringType()
         //{
         //    return _bus.Cartridge.Mirror() == NESGamePak.Mapper.MIRROR.VERTICAL;
         //}
-
-        /// <summary>
-        /// Debug view of the two Name Tables including mirroring
-        /// </summary>
-        /// <returns></returns>
-        public uint[] GetNameTables()
-        {
-            uint[] FourScreens;
-            if (_bus.Cartridge.Mirror() == NESGamePak.Mapper.MIRROR.VERTICAL)
-            {
-                var TwoScreens = Join1DArraysWithKnownSize(GetNameTable(0), GetNameTable(1), 256, 240, false);
-                FourScreens = Join1DArraysWithKnownSize(TwoScreens, TwoScreens, 512, 240, true);
-            } else
-            {
-                var TwoScreens = Join1DArraysWithKnownSize(GetNameTable(0), GetNameTable(1), 256, 240, true);
-                FourScreens = Join1DArraysWithKnownSize(TwoScreens, TwoScreens, 256, 480, false);
-            }
-            
-            return FourScreens;
-        }
 
         // Timing hack grafted from fogleman's nes emulator.
         //
@@ -721,11 +638,19 @@ namespace emulatorTest.PPU2C02
 
         private void DebugSetLastFramePpuScroll(int reg, int fine_x, bool horizontalScrollOnly)
         {
-            ScrollX = (reg & 0x1F) << 3 | fine_x | ((reg & 0x400) != 0 ? 0x100 : 0);
+            ScrollX = (reg & 0x1F) << 3 | fine_x;
+            if ((reg & 0x400) != 0)
+                ScrollX |= 0x100;
             if (!horizontalScrollOnly)
-            {
                 ScrollY = (reg & 0x3E0) >> 2 | (reg & 0x7000) >> 12 | ((reg & 0x800) != 0 ? 240 : 0);
-            }
+        }
+
+        void SetScrollX()
+        {
+            var reg = VramAddr.reg;
+            ScrollX = (reg & 0x1F) << 3 | _fineX;
+            if ((reg & 0x400) != 0)
+                ScrollX |= 0x100;
         }
 
         /// <summary>
