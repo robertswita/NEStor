@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using Common;
 
-namespace guiTest
+namespace NESemuGUI
 {
     public partial class GLView : UserControl
     {

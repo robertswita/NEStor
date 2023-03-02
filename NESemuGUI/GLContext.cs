@@ -1,7 +1,7 @@
 ﻿using System;
 using Common;
 
-namespace guiTest
+namespace NESemuGUI
 {
     public class GLContext
     {
