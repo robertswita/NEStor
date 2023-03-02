@@ -42,17 +42,17 @@ namespace NESemuGUI
 
         private void checkBoxShowPpuScrollOverlay_CheckedChanged(object sender, EventArgs e)
         {
-            glViewNametable.Context.ShowPPUScrollOverlay = !glViewNametable.Context.ShowPPUScrollOverlay;
+            //glViewNametable.Context.ShowPPUScrollOverlay = !glViewNametable.Context.ShowPPUScrollOverlay;
         }
 
         private void checkBoxShowTileGrid_CheckedChanged(object sender, EventArgs e)
         {
-            glViewNametable.Context.ShowTileGrid = !glViewNametable.Context.ShowTileGrid;
+            //glViewNametable.Context.ShowTileGrid = !glViewNametable.Context.ShowTileGrid;
         }
 
         private void checkBoxShowAttributeGrid_CheckedChanged(object sender, EventArgs e)
         {
-            glViewNametable.Context.ShowAttributeGrid = !glViewNametable.Context.ShowAttributeGrid;
+            //glViewNametable.Context.ShowAttributeGrid = !glViewNametable.Context.ShowAttributeGrid;
         }
     }
 }
