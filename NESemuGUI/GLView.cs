@@ -2,11 +2,21 @@
 using System.Windows.Forms;
 using Common;
 
-namespace NESemuGUI
+namespace guiTest
 {
     public partial class GLView : UserControl
     {
         public GLContext Context = new GLContext();
+        TPixmap _FrameBuffer;
+        public TPixmap FrameBuffer
+        {
+            get { return _FrameBuffer; }
+            set
+            {
+                _FrameBuffer = value;
+                Invalidate();
+            }
+        }
 
         public GLView()
         {

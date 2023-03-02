@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Common;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -9,7 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace NESemuGUI
+namespace guiTest
 {
     public partial class FormMain : Form
     {
@@ -25,6 +26,8 @@ namespace NESemuGUI
 
         public bool pause = false;
         public bool reset = false;
+
+        public GLView GLView;
 
         public FormPPUViewer FormPPUViewer;
 
@@ -46,8 +49,21 @@ namespace NESemuGUI
             btnRight = false;
             //fps = 0;
 
+            GLView = glView1;
             FormPPUViewer = new FormPPUViewer();
             FormINESHeader = new FormINESHeader();
+
+            FormPPUViewer.glViewPatternTable0.Context.defaultZoom = 2;
+            FormPPUViewer.glViewPatternTable1.Context.defaultZoom = 2;
+            FormPPUViewer.glViewNametable.Context.defaultZoom = 1.5f;
+            FormPPUViewer.glViewPaletteTile0.Context.defaultZoom = 32;
+            FormPPUViewer.glViewPaletteTile1.Context.defaultZoom = 32;
+            FormPPUViewer.glViewPaletteTile2.Context.defaultZoom = 32;
+            FormPPUViewer.glViewPaletteTile3.Context.defaultZoom = 32;
+            FormPPUViewer.glViewPaletteSprite0.Context.defaultZoom = 32;
+            FormPPUViewer.glViewPaletteSprite1.Context.defaultZoom = 32;
+            FormPPUViewer.glViewPaletteSprite2.Context.defaultZoom = 32;
+            FormPPUViewer.glViewPaletteSprite3.Context.defaultZoom = 32;
         }
 
         public void UpdateFps(int _fps)
@@ -106,104 +122,56 @@ namespace NESemuGUI
             FPS
         }
 
-        public void UpdateView(ref UInt32[] data)
-        {
-            glView1.Context.frameWidth = 256;
-            glView1.Context.frameHeight = 240;
-            glView1.Context.frameBuffer = data;
-            glView1.Invalidate();
-        }
+        //public void UpdateView(ref uint[] data)
+        //{
+        //    glView1.Context.frameWidth = 256;
+        //    glView1.Context.frameHeight = 240;
+        //    glView1.Context.frameBuffer = data;
+        //    glView1.Invalidate();
+        //}
 
-        public void UpdateDebugViewPatternTable(ref UInt32[] data, ref UInt32[] data2)
-        {
-            FormPPUViewer.glViewPatternTable0.Context.frameWidth = 128;
-            FormPPUViewer.glViewPatternTable0.Context.frameHeight = 128;
-            FormPPUViewer.glViewPatternTable0.Context.defaultZoom = 2;
-            FormPPUViewer.glViewPatternTable0.Context.frameBuffer = data;
-            FormPPUViewer.glViewPatternTable0.Invalidate();
+        //public void UpdateDebugViewPatternTable(ref uint[] data)
+        //{
+        //    FormPPUViewer.glViewPatternTable0.Context.frameWidth = 128;
+        //    FormPPUViewer.glViewPatternTable0.Context.frameHeight = 128;
+        //    FormPPUViewer.glViewPatternTable0.Context.defaultZoom = 2;
+        //    FormPPUViewer.glViewPatternTable0.Context.frameBuffer = data;
+        //    FormPPUViewer.glViewPatternTable0.Invalidate();
 
-            FormPPUViewer.glViewPatternTable1.Context.frameWidth = 128;
-            FormPPUViewer.glViewPatternTable1.Context.frameHeight = 128;
-            FormPPUViewer.glViewPatternTable1.Context.defaultZoom = 2;
-            FormPPUViewer.glViewPatternTable1.Context.frameBuffer = data2;
-            FormPPUViewer.glViewPatternTable1.Invalidate();
+        //    FormPPUViewer.glViewPatternTable1.Context.frameWidth = 128;
+        //    FormPPUViewer.glViewPatternTable1.Context.frameHeight = 128;
+        //    FormPPUViewer.glViewPatternTable1.Context.defaultZoom = 2;
+        //    FormPPUViewer.glViewPatternTable1.Context.frameBuffer = data2;
+        //    FormPPUViewer.glViewPatternTable1.Invalidate();
 
-            if(!FormPPUViewer.Visible){
-                debug = false;
-            }
-        }
+        //    if(!FormPPUViewer.Visible){
+        //        debug = false;
+        //    }
+        //}
 
-        public void UpdateDebugViewNameTable(ref UInt32[] data, ushort xScroll, ushort yScroll, Boolean mirroringType)
-        {
-            FormPPUViewer.glViewNametable.Context.frameWidth = 512;
-            FormPPUViewer.glViewNametable.Context.frameHeight = 480;
-            FormPPUViewer.glViewNametable.Context.defaultZoom = (float)1.5;
-            FormPPUViewer.glViewNametable.Context.frameBuffer = data;
-            FormPPUViewer.glViewNametable.Context.xScroll = (short)xScroll;
-            FormPPUViewer.glViewNametable.Context.yScroll = (short)yScroll;
-            FormPPUViewer.glViewNametable.Context.IsNametableViewer = true;
-            FormPPUViewer.glViewNametable.Invalidate();
-            FormPPUViewer.UpdateMirroringType(mirroringType);
-        }
+        //public void UpdateDebugViewNameTable(ref uint[] data, int xScroll, int yScroll, bool mirroringType)
+        //{
+        //    FormPPUViewer.glViewNametable.Context.frameWidth = 512;
+        //    FormPPUViewer.glViewNametable.Context.frameHeight = 480;
+        //    FormPPUViewer.glViewNametable.Context.defaultZoom = (float)1.5;
+        //    FormPPUViewer.glViewNametable.Context.frameBuffer = data;
+        //    FormPPUViewer.glViewNametable.Context.xScroll = (short)xScroll;
+        //    FormPPUViewer.glViewNametable.Context.yScroll = (short)yScroll;
+        //    FormPPUViewer.glViewNametable.Invalidate();
+        //    FormPPUViewer.UpdateMirroringType(mirroringType);
+        //}
 
-        public void UpdateDebugViewPalette(ref UInt32[] data)
-        {
-            UInt32[] tile0 = new UInt32[4] { data[0], data[1], data[2], data[3] };
-            FormPPUViewer.glViewPaletteTile0.Context.frameWidth = 4;
-            FormPPUViewer.glViewPaletteTile0.Context.frameHeight = 1;
-            FormPPUViewer.glViewPaletteTile0.Context.defaultZoom = 32;
-            FormPPUViewer.glViewPaletteTile0.Context.frameBuffer = tile0;
-            FormPPUViewer.glViewPaletteTile0.Invalidate();
-
-            UInt32[] tile1 = new UInt32[4] { data[4], data[5], data[6], data[7] };
-            FormPPUViewer.glViewPaletteTile1.Context.frameWidth = 4;
-            FormPPUViewer.glViewPaletteTile1.Context.frameHeight = 1;
-            FormPPUViewer.glViewPaletteTile1.Context.defaultZoom = 32;
-            FormPPUViewer.glViewPaletteTile1.Context.frameBuffer = tile1;
-            FormPPUViewer.glViewPaletteTile1.Invalidate();
-
-            UInt32[] tile2 = new UInt32[4] { data[8], data[9], data[10], data[11] };
-            FormPPUViewer.glViewPaletteTile2.Context.frameWidth = 4;
-            FormPPUViewer.glViewPaletteTile2.Context.frameHeight = 1;
-            FormPPUViewer.glViewPaletteTile2.Context.defaultZoom = 32;
-            FormPPUViewer.glViewPaletteTile2.Context.frameBuffer = tile2;
-            FormPPUViewer.glViewPaletteTile2.Invalidate();
-
-            UInt32[] tile3 = new UInt32[4] { data[12], data[13], data[14], data[15] };
-            FormPPUViewer.glViewPaletteTile3.Context.frameWidth = 4;
-            FormPPUViewer.glViewPaletteTile3.Context.frameHeight = 1;
-            FormPPUViewer.glViewPaletteTile3.Context.defaultZoom = 32;
-            FormPPUViewer.glViewPaletteTile3.Context.frameBuffer = tile3;
-            FormPPUViewer.glViewPaletteTile3.Invalidate();
-
-            UInt32[] sprite0 = new UInt32[4] { data[16], data[17], data[18], data[19] };
-            FormPPUViewer.glViewPaletteSprite0.Context.frameWidth = 4;
-            FormPPUViewer.glViewPaletteSprite0.Context.frameHeight = 1;
-            FormPPUViewer.glViewPaletteSprite0.Context.defaultZoom = 32;
-            FormPPUViewer.glViewPaletteSprite0.Context.frameBuffer = sprite0;
-            FormPPUViewer.glViewPaletteSprite0.Invalidate();
-
-            UInt32[] sprite1 = new UInt32[4] { data[20], data[21], data[22], data[23] };
-            FormPPUViewer.glViewPaletteSprite1.Context.frameWidth = 4;
-            FormPPUViewer.glViewPaletteSprite1.Context.frameHeight = 1;
-            FormPPUViewer.glViewPaletteSprite1.Context.defaultZoom = 32;
-            FormPPUViewer.glViewPaletteSprite1.Context.frameBuffer = sprite1;
-            FormPPUViewer.glViewPaletteSprite1.Invalidate();
-
-            UInt32[] sprite2 = new UInt32[4] { data[24], data[25], data[26], data[27] };
-            FormPPUViewer.glViewPaletteSprite2.Context.frameWidth = 4;
-            FormPPUViewer.glViewPaletteSprite2.Context.frameHeight = 1;
-            FormPPUViewer.glViewPaletteSprite2.Context.defaultZoom = 32;
-            FormPPUViewer.glViewPaletteSprite2.Context.frameBuffer = sprite2;
-            FormPPUViewer.glViewPaletteSprite2.Invalidate();
-
-            UInt32[] sprite3 = new UInt32[4] { data[28], data[29], data[30], data[31] };
-            FormPPUViewer.glViewPaletteSprite3.Context.frameWidth = 4;
-            FormPPUViewer.glViewPaletteSprite3.Context.frameHeight = 1;
-            FormPPUViewer.glViewPaletteSprite3.Context.defaultZoom = 32;
-            FormPPUViewer.glViewPaletteSprite3.Context.frameBuffer = sprite3;
-            FormPPUViewer.glViewPaletteSprite3.Invalidate();
-        }
+        //public void UpdateDebugViewPalette(TPixmap[] palettes)
+        //{
+        //    FormPPUViewer.glViewPaletteTile0.FrameBuffer = palettes[0];
+        //    FormPPUViewer.glViewPaletteTile1.FrameBuffer = palettes[1];
+        //    FormPPUViewer.glViewPaletteTile2.FrameBuffer = palettes[2];
+        //    FormPPUViewer.glViewPaletteTile3.FrameBuffer = palettes[3];
+        //    FormPPUViewer.glViewPaletteSprite0.FrameBuffer = palettes[4];
+        //    FormPPUViewer.glViewPaletteSprite1.FrameBuffer = palettes[5];
+        //    FormPPUViewer.glViewPaletteSprite2.FrameBuffer = palettes[6];
+        //    FormPPUViewer.glViewPaletteSprite3.FrameBuffer = palettes[7];
+        //}
 
         private void fileToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -358,7 +326,7 @@ namespace NESemuGUI
         private void openToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.InitialDirectory = "c:\\";
+            openFileDialog.InitialDirectory = Path.GetDirectoryName(romPath);
             openFileDialog.Filter = "NES Roms (*.nes)|*.nes|All files (*.*)|*.*";
             openFileDialog.FilterIndex = 1;
             openFileDialog.RestoreDirectory = true;
