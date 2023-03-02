@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Common;
 using emulatorTest.NESGamePak;
-using System.Threading;
+using System;
 using System.Diagnostics;
-using System.Reflection;
 using System.IO;
+using System.Reflection;
+using System.Threading;
 
 namespace emulatorTest
 {
@@ -128,22 +129,43 @@ namespace emulatorTest
                         {
                             if (Bus.PPU.DebugAtScanline == true)
                             {
-                                var debugPatternTable0 = Bus.PPU.GetPatternTable(0, 0);
-                                var debugPatternTable1 = Bus.PPU.GetPatternTable(1, 0);
-                                threads.form.UpdateDebugViewPatternTable(ref debugPatternTable0, ref debugPatternTable1);
-                                var debugNameTable = Bus.PPU.GetNameTables();
+                                var ppuViewer = threads.form.FormPPUViewer;
+                                ppuViewer.glViewPatternTable0.FrameBuffer = Bus.PPU.GetPattern(0, 0);
+                                ppuViewer.glViewPatternTable1.FrameBuffer = Bus.PPU.GetPattern(1, 0);
+                                //if (!ppuViewer.Visible)
+                                //{
+                                //    threads.form.debug = false;
+                                //}
                                 bool mirrorType = Bus.Cartridge.Mirror() == Mapper.MIRROR.VERTICAL;
-                                threads.form.UpdateDebugViewNameTable(ref debugNameTable, Bus.PPU.ScrollX, Bus.PPU.ScrollY, mirrorType);
-
-                                var debugPalette = new uint[4 * 8];
-                                for (byte p = 0; p < 8; p++)
+                                ppuViewer.UpdateMirroringType(mirrorType);
+                                TPixmap fourScreens;
+                                if (mirrorType)
                                 {
-                                    for (byte col = 0; col < 4; col++)
-                                    {
-                                        debugPalette[4 * p + col] = Bus.PPU.GetColourFromPaletteRam(p, col);
-                                    }
+                                    var twoScreens = Bus.PPU.GetNameTable(0).HorzCat(Bus.PPU.GetNameTable(1));
+                                    fourScreens = twoScreens.VertCat(twoScreens);
                                 }
-                                threads.form.UpdateDebugViewPalette(ref debugPalette);
+                                else
+                                {
+                                    var twoScreens = Bus.PPU.GetNameTable(0).VertCat(Bus.PPU.GetNameTable(1));
+                                    fourScreens = twoScreens.HorzCat(twoScreens);
+                                }
+                                ppuViewer.glViewNametable.FrameBuffer = fourScreens;
+                                var palettes = new TPixmap[8];
+                                for (var i = 0; i < 8; i++)
+                                {
+                                    var pal = new TPixmap(4, 1);
+                                    for (var col = 0; col < 4; col++)
+                                        pal.Pixels[col] = Bus.PPU.GetColourFromPaletteRam(i, col);
+                                    palettes[i] = pal;
+                                }
+                                ppuViewer.glViewPaletteTile0.FrameBuffer = palettes[0];
+                                ppuViewer.glViewPaletteTile1.FrameBuffer = palettes[1];
+                                ppuViewer.glViewPaletteTile2.FrameBuffer = palettes[2];
+                                ppuViewer.glViewPaletteTile3.FrameBuffer = palettes[3];
+                                ppuViewer.glViewPaletteSprite0.FrameBuffer = palettes[4];
+                                ppuViewer.glViewPaletteSprite1.FrameBuffer = palettes[5];
+                                ppuViewer.glViewPaletteSprite2.FrameBuffer = palettes[6];
+                                ppuViewer.glViewPaletteSprite3.FrameBuffer = palettes[7];
                             }
                             Bus.PPU.DebugAtScanline = false;
                         }
@@ -153,8 +175,9 @@ namespace emulatorTest
                     Bus.PPU.FrameComplete = false;
 
 
-                    var frame = Bus.PPU.GetScreen();
-                    threads.form.UpdateView(ref frame);
+                    //var frame = Bus.PPU.GetScreen();
+                    //threads.form.UpdateView(ref frame);
+                    threads.form.GLView.FrameBuffer = Bus.PPU.Screen;
                     frameCount++;
                 }
                 // Calculate the framerate every second
@@ -168,26 +191,26 @@ namespace emulatorTest
             }
         }
 
-        static void FlipVerticallyOptimized(ref UInt32[] frame, ref UInt32[] newFrame, int width, int height)
-        {
-            unsafe
-            {
-                fixed (UInt32* pFrame = frame)
-                fixed (UInt32* pNewFrame = newFrame)
-                {
-                    UInt32* pSrc = pFrame + (height - 1) * width;
-                    UInt32* pDst = pNewFrame;
+        //static void FlipVerticallyOptimized(ref UInt32[] frame, ref UInt32[] newFrame, int width, int height)
+        //{
+        //    unsafe
+        //    {
+        //        fixed (UInt32* pFrame = frame)
+        //        fixed (UInt32* pNewFrame = newFrame)
+        //        {
+        //            UInt32* pSrc = pFrame + (height - 1) * width;
+        //            UInt32* pDst = pNewFrame;
 
-                    for (int y = 0; y < height; y++)
-                    {
-                        for (int x = 0; x < width; x++)
-                        {
-                            *pDst++ = *pSrc++;
-                        }
-                        pSrc -= width * 2;
-                    }
-                }
-            }
-        }
+        //            for (int y = 0; y < height; y++)
+        //            {
+        //                for (int x = 0; x < width; x++)
+        //                {
+        //                    *pDst++ = *pSrc++;
+        //                }
+        //                pSrc -= width * 2;
+        //            }
+        //        }
+        //    }
+        //}
     }
 }

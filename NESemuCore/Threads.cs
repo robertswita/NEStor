@@ -1,14 +1,14 @@
-﻿using System;
+﻿using NESemuGUI;
+using System;
 using System.Collections.Generic;
 using System.Text;
-using guiTest;
 using System.Windows.Forms;
 
 namespace emulatorTest
 {
     class Threads
     {
-        public Form1 form;
+        public FormMain form;
 
         public bool dziala = false;
         public void GUI()
@@ -16,7 +16,7 @@ namespace emulatorTest
             Application.SetHighDpiMode(HighDpiMode.SystemAware);
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            form = new Form1();
+            form = new FormMain();
             dziala = true;
             Application.Run(form);
         }
