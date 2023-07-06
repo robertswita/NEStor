@@ -87,40 +87,56 @@ namespace NES
         public float Tick()
         {
             var renderEnabled = Mask.RenderBackground || Mask.RenderSprites;
-            if (X < 16 || renderEnabled)
+            if (Y == -1)
             {
-                if (Y == -1)
+                if (X == 0)
                 {
-                    if (X == 0)
-                    {
-                        Status.SpriteZeroHit = false;
-                        Status.SpriteOverflow = false;
-                        Status.VerticalBlank = false;
-                        PreventVBL = false;
-                        OpenBus = 0;
-                        Bus.Mapper.OnSpritelineEnd();
-                        Bus.Mapper.IRQScanline();
-                        X = 248;
-                    }
-                    else if (X == 256)
+                    Status.SpriteZeroHit = false;
+                    Status.SpriteOverflow = false;
+                    Status.VerticalBlank = false;
+                    PreventVBL = false;
+                    OpenBus = 0;
+                    Bus.Mapper.OnSpritelineEnd();
+                    Bus.Mapper.IRQScanline();
+                    X = 255;
+                }
+                else if (X == 256)
+                {
+                    if (renderEnabled)
                     {
                         VRAM = NextVRAM;
                         ReadSpriteScanline(Y);
-                        X = 312;
                     }
-                    else if (X >= 320 && X <= 335)
-                        ReadNextTile();
+                    X = 319;
                 }
-                else if (Y < Screen.Height)
+                else if (X >= 320 && X <= 335)
                 {
-                    if (X < Screen.Width && (X & 7) == 0 && renderEnabled)
+                    if (renderEnabled)
+                        ReadNextTile();
+                    X += 7;
+                }
+                else if (X == 337 && Bus.SystemType == SystemType.NTSC && renderEnabled && OddFrame)
+                {
+                    Drift--;
+                    X++;
+                }
+            }
+            else if (Y < Screen.Height)
+            {
+                if (X < Screen.Width && (X & 7) == 0)
+                {
+                    if (X == 0)
+                        Bus.Mapper.IRQScanline();
+                    if (renderEnabled)
                     {
-                        if (X == 0)
-                            Bus.Mapper.IRQScanline();
                         ReadNextTile();
                         DrawTileLine(Y, X);
                     }
-                    else if (X == 256)
+                    X += 7;
+                }
+                else if (X == 256)
+                {
+                    if (renderEnabled)
                     {
                         VRAM.ScrollY++;
                         if (VRAM.CoarseY == 0 && VRAM.FineY == 0)
@@ -129,60 +145,53 @@ namespace NES
                             VRAM.ScrollY += 16;
                         VRAM.ScrollX = NextVRAM.ScrollX;
                         ReadSpriteScanline(Y);
-                        X = 312;
                     }
-                    else if (X >= 320 && X <= 335)
-                        ReadNextTile();
+                    X = 319;
                 }
-                else if (Y == Screen.Height) X = MaxX;
-                else if (Y == Screen.Height + 1)
+                else if (X >= 320 && X <= 335)
                 {
-                    if (X == 0)
-                    {
-                        FrameScroll.X = NextVRAM.ScrollX;
-                        FrameScroll.Y = NextVRAM.ScrollY;
-                        if (!PreventVBL)
-                            Status.VerticalBlank = true;
-                    }
-                    else if (X == 2)
-                    {
-                        //condition ensures correct NMI disable delay when done near time when VBL
-                        // is set - BLARGG test 08 - nmi_off_timing.rom
-                        NMIEnabled = Control.EnableNMI;
-                        X = 13;
-                    }
-                    else if (X == 14)
-                    {
-                        if (NMIEnabled && !PreventVBL)
-                            Bus.CPU.NMI();
-                        Y = MaxY;
-                        X = MaxX - 1;
-                    }
+                    if (renderEnabled)
+                        ReadNextTile();
+                    X += 7;
+                }
+            }
+            else if (Y == Screen.Height) X = MaxX;
+            else if (Y == Screen.Height + 1)
+            {
+                if (X == 0)
+                {
+                    FrameScroll.X = NextVRAM.ScrollX;
+                    FrameScroll.Y = NextVRAM.ScrollY;
+                    if (!PreventVBL)
+                        Status.VerticalBlank = true;
+                }
+                else if (X == 2)
+                {
+                    //condition ensures correct NMI disable delay when done near time when VBL
+                    // is set - BLARGG test 08 - nmi_off_timing.rom
+                    NMIEnabled = Control.EnableNMI;
+                    X = 13;
+                }
+                else if (X == 14)
+                {
+                    if (NMIEnabled && !PreventVBL)
+                        Bus.CPU.NMI();
+                    Y = MaxY;
+                    X = MaxX - 1;
                 }
             }
 
-            if (Y < Screen.Height && X >= 0)
-                X += 8;
-            else
-                X++;
+            X++;
             if (X > MaxX)
             {
-                X = 0;
+                X = -1;
                 Y++;
-                if (Y == Screen.Height + 1)
-                    X = -1;
-                else if (Y > MaxY)
+                if (Y > MaxY)
                 {
+                    Y = -1;
                     var maxDot = (MaxX + 2) * (MaxY + 2) + Drift;
                     Drift = maxDot % 3;
                     OddFrame = !OddFrame;
-                    X = -1;
-                    Y = -1;
-                    if (Bus.SystemType == SystemType.NTSC && renderEnabled && OddFrame)
-                    {
-                        Drift--;
-                        X++;
-                    }
                     FrameComplete = true;
                     return maxDot / ClockRatio;
                 }
