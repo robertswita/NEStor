@@ -1,2 +1,1 @@
-Efficient emulation of the Nintendo Entertaining System (without Audio - APU implementation) written in C#.
-Initially student's project, optimized by simple catch-up scheme between PPU and CPU.
+Efficient emulation of the Nintendo Entertaining System written in C#, optimized by simple catch-up scheme between PPU and CPU.
