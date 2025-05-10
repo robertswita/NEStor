@@ -176,7 +176,7 @@ namespace NES
                 float tndOutput = Triangle.Volume / 82.27f + Noise.Volume / 122.41f + Dmc.Volume / 226.38f;
                 //if (!Dmc.IsSilenced) tndOutput += Dmc.Volume / 226.38f;
                 tndOutput = 1.5979f * tndOutput / (1 + tndOutput);
-                return pulseOutput + 0 * tndOutput - 0.5f;
+                return pulseOutput + tndOutput - 0.5f;
             }
         }
 
