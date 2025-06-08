@@ -3,7 +3,7 @@ using System.Net;
 
 namespace NEStor.Core.Cpu
 {
-    partial class CPU
+    partial class CPU: ICycleProviding
     {
         public int IMP() // Implied Accumulator
         {

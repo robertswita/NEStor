@@ -5,7 +5,7 @@ using NEStor.Core;
 
 namespace NEStor.Core.Cpu
 {
-    partial class CPU
+    partial class CPU: ICycleProviding
     {
         Bus Bus;
         public int Frequency;
@@ -39,12 +39,12 @@ namespace NEStor.Core.Cpu
         public StatusRegister Status = new StatusRegister(); // Processor Status 8-bit
         public static Instruction[] InstructionSet;
         public Instruction ActOp;
-        public int Cycle;
-        public Interrupt Nmi;
-        public Interrupt ApuIrq;
-        public Interrupt DmcIrq;
-        public Interrupt MapperIrq;
-        public List<Interrupt> Interrupts = new List<Interrupt>();
+        public int Cycle { get; set; }
+        public IInterrupt Nmi;
+        public IInterrupt ApuIrq;
+        public IInterrupt DmcIrq;
+        public IInterrupt MapperIrq;
+        public List<IInterrupt> Interrupts = new List<IInterrupt>();
         public bool Rst;
         bool PrevIrqDisable;
         bool ActIrqDisable;
@@ -58,6 +58,10 @@ namespace NEStor.Core.Cpu
             ApuIrq = new Interrupt(this);
             DmcIrq = new Interrupt(this);
             MapperIrq = new Interrupt(this);
+            Interrupts.Add(Nmi);
+            Interrupts.Add(ApuIrq);
+            Interrupts.Add(DmcIrq);
+            Interrupts.Add(MapperIrq);
         }
         public void SetZeroNegativeFlags(byte result)
         {
