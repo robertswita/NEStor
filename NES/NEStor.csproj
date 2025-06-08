@@ -24,9 +24,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Remove="Audio\ApuAudioProvider.cs" />
-    <Compile Remove="Audio\EnvelopeCounter.cs" />
-    <Compile Remove="Audio\LengthCounter.cs" />
+    <Compile Remove="Core\Apu\ApuAudioProvider.cs" />
+    <Compile Remove="Core\Apu\EnvelopeCounter.cs" />
+    <Compile Remove="Core\Apu\LengthCounter.cs" />
     <Compile Remove="Cartridge.cs" />
     <Compile Remove="CPU.old.cs" />
     <Compile Remove="Mapper_064.cs" />
