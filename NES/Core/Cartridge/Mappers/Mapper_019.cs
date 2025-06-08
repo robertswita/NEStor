@@ -27,7 +27,7 @@ namespace NEStor.Core.Cartridge.Mappers
         bool _lowChrNtMode;
         bool _highChrNtMode;
         int _irqCounter;
-        public byte[][] CRAM = new byte[32][];
+        //public byte[][] CRAM = new byte[32][];
         public int[] CRAM_PAGE = new int[8];
         bool IrqEnabled;
 
