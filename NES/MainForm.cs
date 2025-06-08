@@ -1,5 +1,8 @@
 ﻿using Common;
 using NEStor;
+using NEStor.Core;
+using NEStor.Core.Ppu;
+using NEStor.Core.Cartridge.Mappers;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
