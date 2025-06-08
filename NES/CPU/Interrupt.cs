@@ -2,23 +2,34 @@
 
 namespace NES
 {
-    internal class Interrupt
+    public interface IInterrupt
+    {
+        bool IsActive { get; }
+        bool IsReady { get; }
+        bool Enabled { get; set; }
+        int Cycle { get; set; }
+        void Start(int delay = 1);
+        void Acknowledge();
+        void Delay();
+    }
+
+    internal class Interrupt: IInterrupt
     {
         CPU Cpu;
-        public bool Enabled;
-        public int Delay = 1;
-        public int Cycle;
-
-        public int Eta { get { return Cpu.Cycle - Cycle - Delay; } }
+        internal int delay = 1;
+        public int Cycle { get; set; }
+        public bool Enabled { get; set; }
+        int Eta { get { return Cpu.Cycle - Cycle - delay; } }
         public bool IsActive { get { return Enabled && Eta >= 0; } }
         public bool IsReady { get { return Enabled && Eta == 0; } }
-        public void Start(int delay = 1) 
+
+        public void Start(int delay = 1)
         {
             if (!Enabled)
             {
                 Enabled = true;
                 Cycle = Cpu.Cycle;
-                Delay = delay;
+                this.delay = delay;
             }
         }
         public void Acknowledge()
@@ -30,6 +41,10 @@ namespace NES
         {
             Cpu = cpu;
             Cpu.Interrupts.Add(this);
+        }
+        public void Delay()
+        {
+            delay++;
         }
     }
 }

@@ -40,11 +40,11 @@ namespace NES
         public static Instruction[] InstructionSet;
         public Instruction ActOp;
         public int Cycle;
-        public Interrupt Nmi;
-        public Interrupt ApuIrq;
-        public Interrupt DmcIrq;
-        public Interrupt MapperIrq;
-        public List<Interrupt> Interrupts = new List<Interrupt>();
+        public IInterrupt Nmi;
+        public IInterrupt ApuIrq;
+        public IInterrupt DmcIrq;
+        public IInterrupt MapperIrq;
+        public List<IInterrupt> Interrupts = new List<IInterrupt>();
         public bool Rst;
         bool PrevIrqDisable;
         bool ActIrqDisable;
@@ -69,7 +69,7 @@ namespace NES
             // If an interrupt occurs during the final cycle of a non-pagecrossing branch
             // then it will be ignored until the next instruction completes
             Read(PC);
-            Interrupts.ForEach(irq => { if (irq.IsReady) irq.Delay++; });
+            Interrupts.ForEach(irq => { if (irq.IsReady) irq.Delay(); });
             ReadPageCross(address, PC);
             PC = address;
         }
