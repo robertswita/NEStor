@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using CPU;
 
 namespace NES
 {
-    partial class CPU
+    partial class CPU: ICycleProviding
     {
         Bus Bus;
         public int Frequency;
@@ -39,7 +40,7 @@ namespace NES
         public StatusRegister Status = new StatusRegister(); // Processor Status 8-bit
         public static Instruction[] InstructionSet;
         public Instruction ActOp;
-        public int Cycle;
+        public int Cycle { get; set; }
         public IInterrupt Nmi;
         public IInterrupt ApuIrq;
         public IInterrupt DmcIrq;
@@ -54,10 +55,15 @@ namespace NES
         {
             Bus = bus;
             CreateInstructionSet();
+            //TODO: move this to bus
             Nmi = new Interrupt(this);
             ApuIrq = new Interrupt(this);
             DmcIrq = new Interrupt(this);
             MapperIrq = new Interrupt(this);
+            Interrupts.Append(Nmi);
+            Interrupts.Append(ApuIrq);
+            Interrupts.Append(DmcIrq);
+            Interrupts.Append(MapperIrq);
         }
         public void SetZeroNegativeFlags(byte result)
         {
